@@ -3,13 +3,13 @@ import threading
 import sys
 import pygtk
 import gtk
-import gtk.glade
+import socket
 from receive import Receive
 from send import Send
 
 class Gui:
+    send=Send()
     def on_ptt_toggled(self, button, name):
-        self.send=Send()
         if button.get_active():
             self.send.start()
             print "PTT on"
@@ -17,9 +17,18 @@ class Gui:
             self.send.stop()
             print "PTT off"
 
+    def on_quit_clicked(self, button, name):
+            self.receive.quit()
+            self.send.quit()
+            gtk.main_quit()
+
     def delete_event(self, widget, event, data=None):
         gtk.main_quit()
         return False
+
+    def enter_callback(self, widget, entry):
+        entry_text = entry.get_text()
+        print "Entry contents: %s\n" % entry_text
 
     def __init__(self):
         self.receive=Receive()
@@ -58,13 +67,20 @@ class Gui:
         button = gtk.Button("Quit")
 
         # If the button is clicked, we call the main_quit function
-        button.connect("clicked", lambda gst: self.receive.quit())
-        button.connect("clicked", lambda gst: self.send.quit())
-        button.connect("clicked", lambda wid: gtk.main_quit())
+        button.connect("clicked", self.on_quit_clicked, "quit")
 
         # Insert the quit button
         vbox.pack_start(button, True, True, 2)
 
+        # Entry
+        entry = gtk.Entry(50)
+        entry.connect("activate", self.enter_callback, entry)
+        entry.set_text("Dst IP")
+        entry.select_region(0, len(entry.get_text()))
+        vbox.pack_start(entry, gtk.TRUE, gtk.TRUE, 0)
+
+
+        entry.show()
         button.show()
         vbox.show()
         self.window.show()

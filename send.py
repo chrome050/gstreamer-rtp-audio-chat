@@ -1,9 +1,10 @@
 #! /usr/bin/env python 
+# Send
 import gobject, pygst
 pygst.require("0.10")
-import gst 
+import gst
 
-DEST_HOST = '192.168.100.37'
+DEST_HOST = '127.0.0.1'
 
 AUDIO_SRC = 'filesrc'
 AUDIO_ENC = 'alawenc'
@@ -89,4 +90,5 @@ class Send:
 
     def quit(self):
         gst.Element.set_state(self.pipeline_send, gst.STATE_NULL)
+        print "quit"
 
