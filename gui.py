@@ -1,5 +1,4 @@
 #!/usr/bin/python
-import threading
 import sys
 import pygtk
 import gtk
@@ -7,8 +6,10 @@ import socket
 from receive import Receive
 from send import Send
 
+
 class Gui:
     send=Send()
+    receive=Receive()
     def on_ptt_toggled(self, button, name):
         if button.get_active():
             self.send.start()
@@ -31,13 +32,12 @@ class Gui:
         print "Entry contents: %s\n" % entry_text
 
     def __init__(self):
-        self.receive=Receive()
         
         # Create a new window
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
 
         # Set the window title
-        self.window.set_title("iBePol - Audio Chat")
+        self.window.set_title("Audio Chat")
         
         # Set a handler for delete_event, that exit Gtk
         self.window.connect("delete_event", self.delete_event)
